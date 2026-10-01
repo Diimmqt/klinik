@@ -1,7 +1,7 @@
 # Klinik — Sistem Antrean Pasien
 
-Aplikasi web manajemen antrean pasien klinik berbasis **Next.js 15** dan **Supabase**.  
-Fitur: pendaftaran pasien, generate nomor antrean otomatis, manajemen status antrean secara realtime, dan riwayat kunjungan harian.
+Aplikasi web manajemen antrean pasien klinik berbasis **Next.js 15** dan **MySQL**.  
+Fitur: pendaftaran pasien, generate nomor antrean otomatis, manajemen status antrean, dan riwayat kunjungan harian.
 
 ---
 
@@ -9,46 +9,37 @@ Fitur: pendaftaran pasien, generate nomor antrean otomatis, manajemen status ant
 
 - Node.js ≥ 18
 - npm ≥ 9
-- Akun [Supabase](https://supabase.com) (gratis)
+- MySQL / MariaDB (lokal via XAMPP, Laragon, Docker, atau cloud)
 
 ---
 
-## 🛠️ Cara Instalasi
+## 🛠️ Cara Instalasi & Setup
 
-### 1. Clone repositori
-
-```bash
-git clone <url-repositori>
-cd klinik
-```
-
-### 2. Install dependensi
+### 1. Install dependensi
 
 ```bash
 npm install
 ```
 
-### 3. Setup Supabase
+### 2. Setup Database MySQL
 
-1. Buat project baru di [supabase.com](https://supabase.com)
-2. Masuk ke **SQL Editor** → klik **New Query**
-3. Copy-paste isi file [`supabase/setup.sql`](./supabase/setup.sql) → klik **Run**
-4. Aktifkan **Realtime** untuk tabel `antrean_pasien`:  
-   `Database → Replication → centang tabel antrean_pasien`
+1. Buat database dan tabel menggunakan file [`setup.sql`](./setup.sql):
+   - Lewat phpMyAdmin / MySQL CLI / DBeaver / Navicat: Import file `setup.sql` atau copy-paste isinya dan jalankan.
+   - Atau via terminal:
+     ```bash
+     mysql -u root -p < setup.sql
+     ```
 
-### 4. Konfigurasi environment
+### 3. Konfigurasi Environment
 
-Buat file `.env.local` di root project:
-
-```bash
-cp .env.local.example .env.local
-```
-
-Isi dengan kredensial project Supabase Anda (tersedia di **Project Settings → API**):
+Edit file `.env` di root project:
 
 ```env
-NEXT_PUBLIC_SUPABASE_URL=https://xxxxxxxxxxx.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...
+MYSQL_HOST=localhost
+MYSQL_PORT=3306
+MYSQL_USER=root
+MYSQL_PASSWORD=
+MYSQL_DATABASE=klinik
 ```
 
 ---
@@ -72,24 +63,14 @@ npm start
 
 ---
 
-## ☁️ Deploy ke Vercel
-
-1. Push repositori ke GitHub
-2. Buka [vercel.com](https://vercel.com) → **New Project** → import repositori
-3. Di bagian **Environment Variables**, tambahkan:
-   - `NEXT_PUBLIC_SUPABASE_URL`
-   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-4. Klik **Deploy**
-
----
-
 ## 📁 Struktur Proyek
 
 ```
 klinik/
 ├── app/
+│   ├── actions.ts          # Server actions (query & mutasi MySQL)
 │   ├── layout.tsx          # Root layout + sidebar
-│   ├── page.tsx            # Dashboard
+│   ├── page.tsx            # Dashboard statistik
 │   ├── register/page.tsx   # Form pendaftaran pasien
 │   ├── queue/page.tsx      # Dashboard antrean
 │   └── history/page.tsx    # Riwayat antrean
@@ -100,9 +81,8 @@ klinik/
 │   ├── QueueDashboard.tsx
 │   └── HistoryTable.tsx
 ├── lib/
-│   └── supabase.ts         # Supabase client + types
-└── supabase/
-    └── setup.sql           # DDL + fungsi Supabase
+│   └── db.ts               # MySQL connection pool + types
+└── setup.sql               # Skrip DDL MySQL
 ```
 
 ---

@@ -10,8 +10,8 @@ export default function QueuePage() {
   return (
     <div className="p-8">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-white">Dashboard Antrean</h1>
-        <p className="text-slate-400 text-sm mt-1">
+        <h1 className="text-2xl font-bold text-slate-900">Dashboard Antrean</h1>
+        <p className="text-slate-500 text-sm mt-1">
           Pantau dan kelola status antrean pasien hari ini
         </p>
       </div>

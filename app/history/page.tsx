@@ -10,10 +10,10 @@ export default function HistoryPage() {
   return (
     <div className="p-8">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-white">
+        <h1 className="text-2xl font-bold text-slate-900">
           Riwayat Antrean Hari Ini
         </h1>
-        <p className="text-slate-400 text-sm mt-1">
+        <p className="text-slate-500 text-sm mt-1">
           Daftar pasien yang telah selesai dilayani
         </p>
       </div>

@@ -2,12 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabase";
+import { registerPatient } from "@/lib/actions";
 import { UserPlus, Loader2, CheckCircle2 } from "lucide-react";
-
-function generateNomorAntrean(count: number) {
-  return `A-${String(count + 1).padStart(3, "0")}`;
-}
 
 export default function RegisterForm() {
   const router = useRouter();
@@ -23,28 +19,8 @@ export default function RegisterForm() {
     setSuccess(null);
 
     try {
-      // Count today's entries to generate queue number
-      const today = new Date().toISOString().split("T")[0];
-      const { count } = await supabase
-        .from("antrean_pasien")
-        .select("*", { count: "exact", head: true })
-        .gte("waktu_pendaftaran", `${today}T00:00:00`)
-        .lte("waktu_pendaftaran", `${today}T23:59:59`);
-
-      const nomor_antrean = generateNomorAntrean(count ?? 0);
-
-      const { error: insertError } = await supabase
-        .from("antrean_pasien")
-        .insert({
-          ...form,
-          nomor_antrean,
-          status: "Menunggu",
-          waktu_pendaftaran: new Date().toISOString(),
-        });
-
-      if (insertError) throw insertError;
-
-      setSuccess(nomor_antrean);
+      const res = await registerPatient(form);
+      setSuccess(res.nomor_antrean);
       setForm({ nama_pasien: "", nik: "", nomor_hp: "" });
       setTimeout(() => router.push("/queue"), 2000);
     } catch (err: unknown) {
@@ -82,32 +58,32 @@ export default function RegisterForm() {
 
   return (
     <div className="max-w-md">
-      <div className="bg-slate-900 rounded-2xl border border-slate-800 p-7 shadow-xl">
+      <div className="bg-white rounded-2xl border border-slate-200 p-7 shadow-sm">
         <div className="flex items-center gap-3 mb-6">
-          <div className="w-10 h-10 rounded-xl bg-emerald-500/15 flex items-center justify-center">
-            <UserPlus size={20} className="text-emerald-400" />
+          <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center">
+            <UserPlus size={20} className="text-blue-600" />
           </div>
-          <h2 className="text-lg font-semibold text-white">
+          <h2 className="text-lg font-semibold text-slate-900">
             Data Pasien
           </h2>
         </div>
 
         {success && (
-          <div className="mb-5 flex items-start gap-3 p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30">
-            <CheckCircle2 size={20} className="text-emerald-400 shrink-0 mt-0.5" />
+          <div className="mb-5 flex items-start gap-3 p-4 rounded-xl bg-emerald-50 border border-emerald-200">
+            <CheckCircle2 size={20} className="text-emerald-600 shrink-0 mt-0.5" />
             <div>
-              <p className="text-emerald-300 font-semibold text-sm">
+              <p className="text-emerald-800 font-semibold text-sm">
                 Pasien berhasil didaftarkan!
               </p>
-              <p className="text-emerald-400/70 text-xs mt-0.5">
-                Nomor antrean: <strong className="text-emerald-300">{success}</strong>
+              <p className="text-emerald-600 text-xs mt-0.5">
+                Nomor antrean: <strong className="text-emerald-700">{success}</strong>
               </p>
             </div>
           </div>
         )}
 
         {error && (
-          <div className="mb-5 p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-sm">
+          <div className="mb-5 p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm">
             {error}
           </div>
         )}
@@ -117,7 +93,7 @@ export default function RegisterForm() {
             <div key={key}>
               <label
                 htmlFor={key}
-                className="block text-xs font-medium text-slate-400 mb-1.5"
+                className="block text-xs font-medium text-slate-600 mb-1.5"
               >
                 {label}
               </label>
@@ -131,7 +107,7 @@ export default function RegisterForm() {
                 onChange={(e) =>
                   setForm((prev) => ({ ...prev, [key]: e.target.value }))
                 }
-                className="w-full bg-slate-800 border border-slate-700 text-white rounded-xl px-4 py-3 text-sm placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all"
+                className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl px-4 py-3 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-all"
               />
             </div>
           ))}
@@ -140,7 +116,7 @@ export default function RegisterForm() {
             type="submit"
             disabled={loading}
             id="btn-register-patient"
-            className="w-full flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-400 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl transition-all duration-200 shadow-lg shadow-emerald-900/30 mt-2"
+            className="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl transition-all duration-200 shadow-md shadow-blue-100 mt-2"
           >
             {loading ? (
               <>

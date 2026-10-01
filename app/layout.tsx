@@ -16,7 +16,7 @@ export default function RootLayout({
   return (
     <html lang="id">
       <body>
-        <div className="flex h-screen bg-slate-950 text-white overflow-hidden">
+        <div className="flex h-screen bg-slate-50 text-slate-900 overflow-hidden">
           <Sidebar />
           <main className="flex-1 overflow-y-auto">{children}</main>
         </div>
