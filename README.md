@@ -99,3 +99,34 @@ Pasien Datang
   → Admin tekan "Selesai" → Status: Selesai
   → Data berpindah ke Riwayat
 ```
+
+---
+
+## ??? Tech Stack & Fungsinya
+
+- **Next.js 15**: Framework React untuk membangun UI, routing (App Router), dan Server Actions (backend logic).
+- **React 18**: Library utama untuk membangun komponen antarmuka pengguna interaktif.
+- **Tailwind CSS**: Framework CSS utility-first untuk styling komponen secara cepat dan responsif.
+- **MySQL (via mysql2)**: Database relasional untuk menyimpan data pasien dan riwayat antrean. mysql2 digunakan sebagai driver penghubung.
+- **Lucide React**: Kumpulan ikon SVG ringan yang digunakan di berbagai komponen UI (misal: ikon sidebar, tombol).
+
+---
+
+## ??? Database & Schema
+
+Proyek ini menggunakan **MySQL** dengan satu tabel utama, yaitu \ntrean_pasien\.
+
+**Schema Tabel \ntrean_pasien\**:
+- \id\ (INT, PK, Auto Increment): Identifier unik tiap record.
+- \
+omor_antrean\ (VARCHAR): Nomor antrean yang digenerate otomatis (contoh: A-001).
+- \
+ik\ (VARCHAR): Nomor Induk Kependudukan pasien.
+- \
+ama_pasien\ (VARCHAR): Nama lengkap pasien.
+- \
+omor_hp\ (VARCHAR): Kontak yang bisa dihubungi.
+- \waktu_pendaftaran\ (DATETIME): Timestamp kapan pasien mendaftar (default CURRENT_TIMESTAMP).
+- \status\ (ENUM): Status antrean saat ini ('Menunggu', 'Dipanggil', 'Sedang Dilayani', 'Selesai').
+
+*(Lihat setup.sql untuk detail DDL)*

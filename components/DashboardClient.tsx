@@ -13,6 +13,7 @@ interface Props {
   weekly: WeeklyCount[];
 }
 
+/** Komponen UI untuk menampilkan metrik dan grafik jumlah pasien mingguan */
 export default function DashboardClient({ total, nextQueue, weekly }: Props) {
   const max = Math.max(...weekly.map((w) => w.count), 1);
 

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { registerPatient } from "@/lib/actions";
 import { UserPlus, Loader2, CheckCircle2 } from "lucide-react";
 
+/** Komponen form untuk mendaftarkan pasien baru ke dalam sistem antrean */
 export default function RegisterForm() {
   const router = useRouter();
   const [form, setForm] = useState({ nama_pasien: "", nik: "", nomor_hp: "" });

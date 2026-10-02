@@ -1,5 +1,9 @@
 import mysql from "mysql2/promise";
 
+/**
+ * Menyimpan instance koneksi pool secara global agar tidak terjadi
+ * kebocoran memori (memory leak) saat Next.js melakukan hot-reload di development.
+ */
 const globalForDb = globalThis as unknown as {
   pool: mysql.Pool | undefined;
 };

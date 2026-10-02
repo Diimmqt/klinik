@@ -8,6 +8,8 @@ if (
   delete (globalThis as any).localStorage;
 }
 
-const nextConfig: NextConfig = {};
+const nextConfig: NextConfig = {
+  serverExternalPackages: ["mysql2"],
+};
 
 export default nextConfig;

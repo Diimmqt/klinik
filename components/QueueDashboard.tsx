@@ -39,6 +39,7 @@ const ACTION_ICON: Partial<Record<StatusAntrean, typeof Phone>> = {
   "Sedang Dilayani": CheckCircle2,
 };
 
+/** Komponen interaktif untuk menampilkan dan mengelola tabel antrean pasien hari ini */
 export default function QueueDashboard() {
   const [queue, setQueue] = useState<AntreanPasien[]>([]);
   const [loading, setLoading] = useState(true);

@@ -3,6 +3,7 @@
 import { pool, type AntreanPasien, type StatusAntrean } from "@/lib/db";
 import type { RowDataPacket, ResultSetHeader } from "mysql2";
 
+/** Mengambil statistik dashboard: total pasien hari ini, antrean berikutnya, dan riwayat mingguan */
 export async function getDashboardStats() {
   const [rows] = await pool.query<RowDataPacket[]>(
     `SELECT id, status, waktu_pendaftaran, nomor_antrean 
@@ -47,6 +48,7 @@ export async function getDashboardStats() {
   };
 }
 
+/** Mengambil daftar antrean aktif hari ini (selain status Selesai) */
 export async function getActiveQueue(): Promise<AntreanPasien[]> {
   const [rows] = await pool.query<RowDataPacket[]>(
     `SELECT id, nomor_antrean, nik, nama_pasien, nomor_hp, waktu_pendaftaran, status 
@@ -58,6 +60,7 @@ export async function getActiveQueue(): Promise<AntreanPasien[]> {
   return rows as AntreanPasien[];
 }
 
+/** Mengambil daftar riwayat antrean hari ini yang sudah berstatus Selesai */
 export async function getHistoryQueue(): Promise<AntreanPasien[]> {
   const [rows] = await pool.query<RowDataPacket[]>(
     `SELECT id, nomor_antrean, nik, nama_pasien, nomor_hp, waktu_pendaftaran, status 
@@ -69,6 +72,7 @@ export async function getHistoryQueue(): Promise<AntreanPasien[]> {
   return rows as AntreanPasien[];
 }
 
+/** Mendaftarkan pasien baru dan meng-generate nomor antrean otomatis (A-00X) */
 export async function registerPatient(data: {
   nama_pasien: string;
   nik: string;
@@ -91,6 +95,7 @@ export async function registerPatient(data: {
   return { success: true, nomor_antrean };
 }
 
+/** Mengubah status antrean pasien (Menunggu -> Dipanggil -> Dilayani -> Selesai) */
 export async function updateQueueStatus(id: number, status: StatusAntrean) {
   await pool.query<ResultSetHeader>(
     `UPDATE antrean_pasien SET status = ? WHERE id = ?`,
@@ -99,6 +104,7 @@ export async function updateQueueStatus(id: number, status: StatusAntrean) {
   return { success: true };
 }
 
+/** Menghapus data pasien dari daftar antrean */
 export async function deleteQueueItem(id: number) {
   await pool.query<ResultSetHeader>(
     `DELETE FROM antrean_pasien WHERE id = ?`,
